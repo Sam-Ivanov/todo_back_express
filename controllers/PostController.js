@@ -1,21 +1,21 @@
 import PostModel from '../models/Post.js';
 
-export const getLastTags = async (req, res) => {
-   try {
-      const posts = await PostModel.find().limit(5).exec();
+// export const getLastTags = async (req, res) => {
+//    try {
+//       const posts = await PostModel.find().limit(5).exec();
 
-      const tags = posts.map(obj => obj.tags).flat().slice(0, 5);
+//       const tags = posts.map(obj => obj.tags).flat().slice(0, 5);
 
-      res.json(tags);
-   } catch (err) {
-      console.log(err);
-      res.status(500).json({
-         message: 'Не удалось получить тэги',
-      });
-   }
-};
+//       res.json(tags);
+//    } catch (err) {
+//       console.log(err);
+//       res.status(500).json({
+//          message: 'Не удалось получить тэги',
+//       });
+//    }
+// };
 
-export const getAll = async (req, res) => {
+export const getAll = async (req, res) => {                         //по идее тоже не нужен, ведь нам надо фильровать все туду по id пользователя
    try {
       const posts = await PostModel.find().populate('user').exec();
       res.json(posts);
@@ -68,7 +68,7 @@ export const getOne = async (req, res) => {
 
 export const remove = async (req, res) => {
    try {
-      const postId = req.params.id;
+      const postId = req.params.id; // id будет приходить сразу в запросе req.id
 
       PostModel.findOneAndDelete({
          _id: postId,
@@ -77,13 +77,13 @@ export const remove = async (req, res) => {
             if (err) {
                console.log(err);
                return res.status(500).json({
-                  message: 'Не удалось удалить статью',
+                  message: 'Не удалось удалить todo',
                });
             }
 
             if (!doc) {
                return res.status(404).json({
-                  message: 'Статья не найдена'
+                  message: 'todo не найден'
                });
             }
 
@@ -95,7 +95,7 @@ export const remove = async (req, res) => {
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Не удалось получить статьи',
+         message: 'Не удалось получить todo',
       });
    }
 };
@@ -103,39 +103,39 @@ export const remove = async (req, res) => {
 export const create = async (req, res) => {
    try {
       const doc = new PostModel({
-         title: req.body.title,
+         name: req.body.name,
          text: req.body.text,
-         imageUrl: req.body.imageUrl,
-         tags: req.body.tags?.split(','),
+         // imageUrl: req.body.imageUrl,
+         // tags: req.body.tags?.split(','),
          user: req.userId,
       });
 
-      const post = await doc.save();
-      console.log('Post:', post);
-      console.log('req', req);
-      res.json(post);
+      const todo = await doc.save();
+      // console.log('Post:', post);
+      // console.log('req', req);
+      res.json(todo);
    } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({
-         message: 'Не удалось создать статью',
+         message: 'Не удалось создать todo',
       });
    }
 };
 
 export const update = async (req, res) => {
    try {
-      const postId = req.params.id;
+      const postId = req.params.id; //id будет сразу в запросе => req.id
 
       await PostModel.updateOne(
          {
             _id: postId,
          },
          {
-            title: req.body.title,
+            name: req.body.name,
             text: req.body.text,
-            imageUrl: req.body.imageUrl,
+            // imageUrl: req.body.imageUrl,
             user: req.userId,
-            tags: req.body.tags?.split(','),
+            // tags: req.body.tags?.split(','),
          },
       );
 
@@ -145,7 +145,7 @@ export const update = async (req, res) => {
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Не удалось обновить статью',
+         message: 'Не удалось обновить todo',
       });
    }
 };
