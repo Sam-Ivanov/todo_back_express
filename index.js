@@ -43,7 +43,7 @@ app.post('/todos', checkAuth, TodoCreateValidation, handleValidationErrors, Todo
 app.delete('/todos', checkAuth, TodoController.remove);
 app.patch('/todos', checkAuth, TodoController.update);
 
-app.listen(6666, (err => {
+app.listen(3001, (err => {
    if (err) {
       return console.log(err);
    }

@@ -5,7 +5,6 @@ export const getAll = async (req, res) => {                         //по ид�
       const posts = await TodoModel.find({ user: req.userId });
       res.json(posts);
    } catch (err) {
-      console.log(err);
       res.status(500).json({
          message: 'Не удалось получить todos',
       });
