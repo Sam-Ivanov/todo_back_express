@@ -1,24 +1,20 @@
 import mongoose from "mongoose";
 
-const PostSchema = new mongoose.Schema(
+const TodoSchema = new mongoose.Schema(
    {
-      name: {
+      todoListName: {
          type: String,
          required: true,
       },
       text: {
          type: String,
          required: true,
-         unique: true,
       },
-      // tags: {
-      //    type: Array,
-      //    default: [],
-      // },
-      // viewsCount: {
-      //    type: Number,
-      //    default: 0,
-      // },
+      complited: {
+         type: Boolean,
+         require: true,
+         default: false
+      },
       user: {
          type: mongoose.Schema.Types.ObjectId,
          ref: 'User',
@@ -31,4 +27,4 @@ const PostSchema = new mongoose.Schema(
    }
 );
 
-export default mongoose.model('Post', PostSchema);
+export default mongoose.model('Todo', TodoSchema);

@@ -1,28 +1,13 @@
-import PostModel from '../models/Post.js';
-
-// export const getLastTags = async (req, res) => {
-//    try {
-//       const posts = await PostModel.find().limit(5).exec();
-
-//       const tags = posts.map(obj => obj.tags).flat().slice(0, 5);
-
-//       res.json(tags);
-//    } catch (err) {
-//       console.log(err);
-//       res.status(500).json({
-//          message: 'Не удалось получить тэги',
-//       });
-//    }
-// };
+import TodoModel from '../models/Todo.js';
 
 export const getAll = async (req, res) => {                         //по идее тоже не нужен, ведь нам надо фильровать все туду по id пользователя
    try {
-      const posts = await PostModel.find().populate('user').exec();
+      const posts = await TodoModel.find({ user: req.userId });
       res.json(posts);
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Не удалось получить статьи',
+         message: 'Не удалось получить todos',
       });
    }
 };
@@ -31,7 +16,7 @@ export const getOne = async (req, res) => {
    try {
       const postId = req.params.id;
 
-      PostModel.findOneAndUpdate({              //если не надо обновлять счетчик просмотреов, можно использовать findOne или findById
+      TodoModel.findOneAndUpdate({              //если не надо обновлять счетчик просмотреов, можно использовать findOne или findById
          _id: postId,
       },
          {
@@ -68,10 +53,9 @@ export const getOne = async (req, res) => {
 
 export const remove = async (req, res) => {
    try {
-      const postId = req.params.id; // id будет приходить сразу в запросе req.id
-
-      PostModel.findOneAndDelete({
-         _id: postId,
+      TodoModel.findOneAndDelete({
+         _id: req.body.id,
+         user:req.userId
       },
          (err, doc) => {
             if (err) {
@@ -80,13 +64,11 @@ export const remove = async (req, res) => {
                   message: 'Не удалось удалить todo',
                });
             }
-
             if (!doc) {
                return res.status(404).json({
                   message: 'todo не найден'
                });
             }
-
             res.json({
                success: true,
             });
@@ -102,20 +84,15 @@ export const remove = async (req, res) => {
 
 export const create = async (req, res) => {
    try {
-      const doc = new PostModel({
-         name: req.body.name,
+      const doc = new TodoModel({
+         todoListName: req.body.todoListName,
          text: req.body.text,
-         // imageUrl: req.body.imageUrl,
-         // tags: req.body.tags?.split(','),
+         complited: req.body.complited,
          user: req.userId,
       });
-
       const todo = await doc.save();
-      // console.log('Post:', post);
-      // console.log('req', req);
       res.json(todo);
    } catch (err) {
-      // console.log(err);
       res.status(500).json({
          message: 'Не удалось создать todo',
       });
@@ -123,29 +100,46 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
-   try {
-      const postId = req.params.id; //id будет сразу в запросе => req.id
-
-      await PostModel.updateOne(
-         {
-            _id: postId,
-         },
-         {
-            name: req.body.name,
-            text: req.body.text,
-            // imageUrl: req.body.imageUrl,
-            user: req.userId,
-            // tags: req.body.tags?.split(','),
-         },
-      );
-
-      res.json({
-         seccess: true,
-      });
-   } catch (err) {
-      console.log(err);
-      res.status(500).json({
-         message: 'Не удалось обновить todo',
-      });
+   if (req.body.name) {
+      try {
+         await TodoModel.updateMany(
+            {
+               todoListName: req.body.name,
+               user:req.userId
+            },
+            {
+               todoListName: req.body.newName,
+            },
+         );
+         res.json({
+            seccess: true,
+         });
+      } catch (err) {
+         console.log(err);
+         res.status(500).json({
+            message: 'Не удалось обновить todoListName',
+         });
+      }
+   } else if(req.body.id){
+      try {
+         await TodoModel.updateOne(
+            {
+               _id: req.body.id,
+               user:req.userId
+            },
+            {
+               text: req.body.newText,
+            },
+         );
+         res.json({
+            seccess: true,
+         });
+      } catch (err) {
+         console.log(err);
+         res.status(500).json({
+            message: 'Не удалось обновить text',
+         });
+      }
    }
 };
+

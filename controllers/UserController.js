@@ -12,6 +12,7 @@ export const register = async (req, res) => {
          email: req.body.email,
          fullName: req.body.fullName,
          avatarUrl: req.body.avatarUrl,
+         todoListNames: req.body.todoListNames,
          passwordHash: hash,
       });
 
@@ -95,11 +96,32 @@ export const getMe = async (req, res) => {
       const { passwordHash, ...userData } = user._doc;
 
       res.json(userData);
-   } catch (err) { 
+   } catch (err) {
       console.log(err);
       res.status(500).json({
          message: 'Нет доступа',
       });
 
+   }
+};
+
+export const updateTodoListNames = async (req, res) => {
+   try {
+      await UserModel.updateOne(
+         {
+            _id: req.userId
+         },
+         {
+            todoListNames: req.body.newTodoListNames,
+         },
+      );
+      res.json({
+         seccess: true,
+      });
+   } catch (err) {
+      console.log(err);
+      res.status(500).json({
+         message: 'Не удалось обновить todoListNames',
+      });
    }
 };
