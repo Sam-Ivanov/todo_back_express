@@ -2,6 +2,7 @@ import TodoModel from '../models/Todo.js';
 
 export const getAll = async (req, res) => {                         //по идее тоже не нужен, ведь нам надо фильровать все туду по id пользователя
    try {
+
       const posts = await TodoModel.find({ user: req.userId });
       res.json(posts);
    } catch (err) {
@@ -86,7 +87,7 @@ export const create = async (req, res) => {
       const doc = new TodoModel({
          todoListName: req.body.todoListName,
          text: req.body.text,
-         complited: req.body.complited,
+         completed: req.body.completed,
          user: req.userId,
       });
       const todo = await doc.save();
