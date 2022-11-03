@@ -51,36 +51,72 @@ export const getOne = async (req, res) => {
    }
 };
 
+// export const remove = async (req, res) => {
+//    try {
+//       TodoModel.findOneAndDelete({
+//          _id: req.body.id,
+//          user:req.userId
+//       },
+//          (err, doc) => {
+//             if (err) {
+//                console.log(err);
+//                return res.status(500).json({
+//                   message: 'Не удалось удалить todo',
+//                });
+//             }
+//             if (!doc) {
+//                return res.status(404).json({
+//                   message: 'todo не найден'
+//                });
+//             }
+//             res.json({
+//                success: true,
+//             });
+//          },
+//       );
+//    } catch (err) {
+//       console.log(err);
+//       res.status(500).json({
+//          message: 'Не удалось получить todo',
+//       });
+//    }
+// };
+
 export const remove = async (req, res) => {
-   try {
-      TodoModel.findOneAndDelete({
-         _id: req.body.id,
-         user:req.userId
-      },
-         (err, doc) => {
-            if (err) {
-               console.log(err);
-               return res.status(500).json({
-                  message: 'Не удалось удалить todo',
-               });
-            }
-            if (!doc) {
-               return res.status(404).json({
-                  message: 'todo не найден'
-               });
-            }
-            res.json({
-               success: true,
+   if (req.body.id) {
+      try {
+         await TodoModel.deleteOne({
+            _id: req.body.id,
+            user: req.userId
+         });
+         res.json({
+            seccess: true,
+         });
+      } catch (err) {
+         console.log(err);
+         res.status(500).json({
+            message: 'Не удалось удалить todo',
+         });
+      }
+   } else
+      if (req.body.todoListName) {
+         try {
+            await TodoModel.deleteMany({
+               todoListName: req.body.todoListName,
+               user: req.userId
             });
-         },
-      );
-   } catch (err) {
-      console.log(err);
-      res.status(500).json({
-         message: 'Не удалось получить todo',
-      });
-   }
+            res.json({
+               seccess: true,
+            });
+         } catch (err) {
+            console.log(err);
+            res.status(500).json({
+               message: 'Не удалось удалить todo',
+            });
+         }
+      }
 };
+
 
 export const create = async (req, res) => {
    try {
@@ -105,7 +141,7 @@ export const update = async (req, res) => {
          await TodoModel.updateMany(
             {
                todoListName: req.body.name,
-               user:req.userId
+               user: req.userId
             },
             {
                todoListName: req.body.newName,
@@ -120,12 +156,12 @@ export const update = async (req, res) => {
             message: 'Не удалось обновить todoListName',
          });
       }
-   } else if(req.body.id){
+   } else if (req.body.id) {
       try {
          await TodoModel.updateOne(
             {
                _id: req.body.id,
-               user:req.userId
+               user: req.userId
             },
             {
                text: req.body.newText,
