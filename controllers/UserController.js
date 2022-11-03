@@ -107,21 +107,37 @@ export const getMe = async (req, res) => {
 
 export const updateTodoListNames = async (req, res) => {
    try {
-      await UserModel.updateOne(
+      UserModel.findOneAndUpdate(
          {
             _id: req.userId
          },
          {
-            todoListNames: req.body.newTodoListNames,
+            todoListNames: req.body.todoListNames,
          },
+         {
+            returnDocument: 'after',
+         },
+         (err, doc) => {
+            if (err) {
+               console.log(err);
+               return res.status(500).json({
+                  message: 'Не удалось вернуть пользователя'
+               });
+            }
+            if (!doc) {
+               return res.status(404).json({
+                  message: 'Пользователь не найден',
+               });
+            }
+            const { passwordHash, ...userData } = doc._doc;
+            res.json(userData);
+         }
       );
-      res.json({
-         seccess: true,
-      });
    } catch (err) {
       console.log(err);
       res.status(500).json({
-         message: 'Не удалось обновить todoListNames',
+         message: 'Не удалось обновить пользователя',
       });
    }
 };
+
