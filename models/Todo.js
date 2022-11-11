@@ -11,9 +11,9 @@ const TodoSchema = new mongoose.Schema(
          required: true,
       },
       completed: {
-         type: Boolean,
+         type: String,
          require: true,
-         default: false
+         default: 'false'
       },
       user: {
          type: mongoose.Schema.Types.ObjectId,
@@ -21,10 +21,11 @@ const TodoSchema = new mongoose.Schema(
          required: true,
       },
       // imageUrl: String,
-   },
-   {
-      timestamps: true,
    }
+   // ,
+   // {
+   //    timestamps: true,
+   // }
 );
 
 export default mongoose.model('Todo', TodoSchema);

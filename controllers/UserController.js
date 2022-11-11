@@ -27,7 +27,7 @@ export const register = async (req, res) => {
          },
       );
 
-      const { passwordHash, ...userData } = user._doc;
+      const { passwordHash, __v, ...userData } = user._doc;
 
       res.json({
          ...userData,
@@ -68,7 +68,7 @@ export const login = async (req, res) => {
             expiresIn: '30d',
          },
       );
-      const { passwordHash, ...userData } = user._doc;
+      const { passwordHash, __v, ...userData } = user._doc;
 
       res.json({
          ...userData,
@@ -93,7 +93,7 @@ export const getMe = async (req, res) => {
          });
       }
 
-      const { passwordHash, ...userData } = user._doc;
+      const { passwordHash, __v, ...userData } = user._doc;
 
       res.json(userData);
    } catch (err) {
@@ -129,7 +129,7 @@ export const updateTodoListNames = async (req, res) => {
                   message: 'Пользователь не найден',
                });
             }
-            const { passwordHash, ...userData } = doc._doc;
+            const { passwordHash, __v, ...userData } = doc._doc;
             res.json(userData);
          }
       );

@@ -20,10 +20,11 @@ const UserSchema = new mongoose.Schema(
          default: []
       },
       avatarUrl: String,
-   },
-   {
-      timestamps: true,
    }
+   // ,
+   // {
+   //    timestamps: true,
+   // }
 );
 
 export default mongoose.model('User', UserSchema);
