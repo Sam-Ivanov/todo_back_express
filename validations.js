@@ -13,7 +13,7 @@ export const registerValidation = [
 ];
 
 export const TodoCreateValidation = [
-   body('todoListName', 'Введите заголовок статьи').isLength({ min: 1 }).isString(),
+   body('todoListName', 'Введите название листа').isLength({ min: 1 }).isString(),
    body('text', 'Введите текст статьи').isLength({ min: 1 }).isString(),
-   // body('completed', 'Ошибка в completed').optional().isBoolean()
+   body('completed', 'Ошибка типов completed').optional().isBoolean()
 ];

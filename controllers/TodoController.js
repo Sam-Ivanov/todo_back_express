@@ -138,15 +138,15 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
-   if (req.body.name && req.body.newName) {
+   if (req.body.todoListName && req.body.newTodoListName) {
       try {
          await TodoModel.updateMany(
             {
-               todoListName: req.body.name,
+               todoListName: req.body.todoListName,
                user: req.userId
             },
             {
-               todoListName: req.body.newName,
+               todoListName: req.body.newTodoListName,
             },
          );
          res.json({
@@ -178,7 +178,7 @@ export const update = async (req, res) => {
             message: 'Не удалось обновить text',
          });
       }
-   } else if (req.body.id && req.body.completed) {
+   } else if (req.body.id && req.body.completed !== undefined) {
       try {
          await TodoModel.updateOne(
             {
@@ -198,6 +198,10 @@ export const update = async (req, res) => {
             message: 'Не удалось обновить completed',
          });
       }
+   } else {
+      res.json({
+         success: false,
+      });
    }
 };
 

@@ -11,9 +11,9 @@ const TodoSchema = new mongoose.Schema(
          required: true,
       },
       completed: {
-         type: String,
+         type: Boolean,
          require: true,
-         default: 'false'
+         default: false
       },
       user: {
          type: mongoose.Schema.Types.ObjectId,
