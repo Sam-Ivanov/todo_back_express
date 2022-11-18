@@ -31,17 +31,22 @@ app.use('/uploads', express.static('uploads')); //(эта штукуа пони�
 app.post('/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/register', registerValidation, handleValidationErrors, UserController.register);
 app.get('/me', checkAuth, UserController.getMe);
-app.patch('/user', checkAuth, UserController.updateTodoListNames); 
+app.patch('/user', checkAuth, UserController.updateTodoListNames);
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
    res.json({
       url: `/uploads/${req.file.originalname}`,
    });
 });
 
-app.get('/todos', checkAuth,TodoController.getAll);
+app.get('/todos', checkAuth, TodoController.getAll);
 app.post('/todos', checkAuth, TodoCreateValidation, handleValidationErrors, TodoController.create);
-app.delete('/todos', checkAuth, TodoController.remove);
+// app.delete('/todos', checkAuth, TodoController.remove);
 app.patch('/todos', checkAuth, TodoController.update);
+/////////////
+app.delete('/todo/:id', checkAuth, TodoController.removeOne);
+app.delete('/todos/:todoListName', checkAuth, TodoController.removeMany);
+app.delete('/todos/completed/:todoListName', checkAuth, TodoController.removeCompletedTodos);
+/////////////
 
 app.listen(3001, (err => {
    if (err) {

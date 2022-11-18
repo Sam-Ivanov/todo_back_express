@@ -21,10 +21,11 @@ const TodoSchema = new mongoose.Schema(
          required: true,
       },
       // imageUrl: String,
-   },
-   {
-      timestamps: true,
    }
+   // ,
+   // {
+   //    timestamps: true,
+   // }
 );
 
 export default mongoose.model('Todo', TodoSchema);
