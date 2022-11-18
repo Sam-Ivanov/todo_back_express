@@ -40,8 +40,13 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 
 app.get('/todos', checkAuth, TodoController.getAll);
 app.post('/todos', checkAuth, TodoCreateValidation, handleValidationErrors, TodoController.create);
-app.delete('/todos', checkAuth, TodoController.remove);
+// app.delete('/todos', checkAuth, TodoController.remove);
 app.patch('/todos', checkAuth, TodoController.update);
+/////////////
+app.delete('/todo/:id', checkAuth, TodoController.removeOne);
+app.delete('/todos/:todoListName', checkAuth, TodoController.removeMany);
+app.delete('/todos/completed/:todoListName', checkAuth, TodoController.removeCompletedTodos);
+/////////////
 
 app.listen(3001, (err => {
    if (err) {
